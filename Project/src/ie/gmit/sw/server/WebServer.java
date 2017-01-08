@@ -116,22 +116,21 @@ private ObjectInputStream in;
 
 		//The interface Runnable declare the method "public void run();" that must be implemented
         public void run() {
-            try{ //Try the following. If anything goes wrong, the error will be passed to the catch block
+            
+        	Object message;
+        	String fileDownload = null;
+        	boolean download = false;
+        	try{ //Try the following. If anything goes wrong, the error will be passed to the catch block
             	
-            	//Read in the request from the remote computer to this programme. This process is called Deserialization or Unmarshalling
-            	String message;
-            	String fileDownload = null;
-            	boolean download = false;
-            	in = new ObjectInputStream(sock.getInputStream());
-                Object command = in.readObject(); //Deserialise the request into an Object
-                out = new ObjectOutputStream(sock.getOutputStream());
-                //if equals 2 send list of files back
-                //while(keepRunning)
-                //{
+        		while(keepRunning)
+                {
+	            	in = new ObjectInputStream(sock.getInputStream());
+	                Object command = in.readObject(); //Deserialise the request into an Object
+	                ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 	                if(command.toString().equals("2"))
 	                {
 	                	//FileList fileList = new FileList();
-	                	String f = FileList.resultOfFiles().toString();
+	                	String f = FileList.resultOfFiles(dir).toString();
 	                	message = f;
 	                	out.writeObject(message);
 	                    out.flush();
@@ -147,7 +146,7 @@ private ObjectInputStream in;
 	                    command = in.readObject();//Deserialise the request into an Object
 	                    
 	                    //search list for files
-	                    ArrayList<String> files = FileList.resultOfFiles();
+	                    ArrayList<String> files = FileList.resultOfFiles(dir);
 	                    for (String file : files) {
 							if(command.toString().equalsIgnoreCase(file))
 							{
@@ -163,7 +162,7 @@ private ObjectInputStream in;
 	                    //if download == true send file
 	                    if(download == true)
 	                    {
-							File myFile = new File("C:/Users/User/Desktop/Client2/Project/Files/"+fileDownload);
+							File myFile = new File(dir+fileDownload);
 				            byte[] byteArray = new byte[(int) myFile.length()];
 				            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
 				            bis.read(byteArray, 0,byteArray.length);
@@ -173,15 +172,13 @@ private ObjectInputStream in;
 							out.flush();
 	                    }
 	                }
-            	//}//end while		
-                out.close(); //Tidy up after and don't wolf up resources unnecessarily
+                }//while end
                 
             } catch (Exception e) { 
             	System.out.println("Error processing request from " + sock.getRemoteSocketAddress());
             	e.printStackTrace();
             }
-        }
-	}//End of inner class HTTPRequest
-
+        }//End of inner class HTTPRequest
+	}
 }//End of class WebServer
 

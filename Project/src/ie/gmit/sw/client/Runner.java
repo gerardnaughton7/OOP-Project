@@ -45,30 +45,26 @@ public class Runner {
 			if(choice == 1)
 			{
 				run();
-				try {
-					out = new ObjectOutputStream(Connection.getOutputStream());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 			//ask for file list
 			else if(choice == 2)
 			{
-				getList();
+				try {
+					getList();
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Error getting list of files" + e.getMessage());
+				}
 			}
 			//ask for file
 			else if(choice == 3)
 			{
-				try {
-					getFile();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Error downloading file"+ e.getMessage());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Error downloading file"+ e.getMessage());
-				}
+					try {
+						getFile();
+					} catch (ClassNotFoundException | IOException e) {
+						// TODO Auto-generated catch block
+						System.out.println("Error getting file" + e.getMessage());
+					}	
 			}
 			//close connection
 			else if(choice == 4)
@@ -93,12 +89,12 @@ public class Runner {
 	private static void getFile() throws IOException, ClassNotFoundException{
 		//instance if scanner
 		Scanner scan = new Scanner(System.in);
-		String command;
-		String response;
-		
+		Object command;
+		Object response;
+		out = new ObjectOutputStream(Connection.getOutputStream());
 		//send over 3 to choose option on server side
 		command = "3";
-		sendMessage(command);
+		sendMessage(command.toString());
 		
 		//response from server asking for file name
 		in = new ObjectInputStream(Connection.getInputStream());
@@ -112,7 +108,7 @@ public class Runner {
 		response = (String) in.readObject(); //Deserialise
 		
 		//if equals 1 except file
-		if(response == "1")
+		if(response.toString().equals("1"))
 		{
 			//download file
 			//declare byte array
@@ -131,22 +127,18 @@ public class Runner {
 		
 	}
 	//get list of files
-	private static void getList(){
+	private static void getList() throws IOException, ClassNotFoundException{
 		// TODO Auto-generated method stub
 		//send command to get file list
 		String command = "2";
 		String response;
-		sendMessage(command);
 		
-		//response from server with file list
-		try {
-			in = new ObjectInputStream(Connection.getInputStream());
-			response = (String) in.readObject(); //Deserialise
-			System.out.println(response);
-		} catch (IOException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		out = new ObjectOutputStream(Connection.getOutputStream());
+		sendMessage(command);
+		in = new ObjectInputStream(Connection.getInputStream());
+		response = (String) in.readObject(); //Deserialise
+		System.out.println(response);
+		
 		
 	}
 	//establish connection
