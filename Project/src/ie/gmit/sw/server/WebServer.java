@@ -129,10 +129,9 @@ private ObjectInputStream in;
 	                ObjectOutputStream out = new ObjectOutputStream(sock.getOutputStream());
 	                if(command.toString().equals("2"))
 	                {
-	                	//FileList fileList = new FileList();
-	                	String f = FileList.resultOfFiles(dir).toString();
-	                	message = f;
-	                	out.writeObject(message);
+			    String f = FileList.resultOfFiles(dir).toString();
+			    message = f;
+			    out.writeObject(message);
 	                    out.flush();
 	                }
 	                //else if equals 3 verify file and send back file or file does not exist
@@ -140,7 +139,7 @@ private ObjectInputStream in;
 	                {
 	                	//ask user for the file name
 	                    message = "What file do you wish to download?";
-	                	out.writeObject(message);
+	                    out.writeObject(message);
 	                    out.flush();
 	                    //verify to user if file is valid
 	                    command = in.readObject();//Deserialise the request into an Object
@@ -162,14 +161,14 @@ private ObjectInputStream in;
 	                    //if download == true send file
 	                    if(download == true)
 	                    {
-							File myFile = new File(dir+fileDownload);
-				            byte[] byteArray = new byte[(int) myFile.length()];
-				            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
-				            bis.read(byteArray, 0,byteArray.length);
+				    File myFile = new File(dir+fileDownload);
+				    byte[] byteArray = new byte[(int) myFile.length()];
+				    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(myFile));
+				    bis.read(byteArray, 0,byteArray.length);
 				            
-				            out.write(byteArray, 0, byteArray.length);
-				            System.out.println(+byteArray.length);
-							out.flush();
+				    out.write(byteArray, 0, byteArray.length);
+				    System.out.println(+byteArray.length);
+				    out.flush();
 	                    }
 	                }
                 }//while end
