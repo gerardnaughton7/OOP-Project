@@ -21,14 +21,6 @@ public class FileList {
 	    }
 	}
 	return result;//return list of files
-	}
-	
-	/*public static void main(String[] args)
-	{
-		ArrayList r  = resultOfFiles();
-		
-		System.out.println(r);
-	}*/
-	
+	}	
 }
 
